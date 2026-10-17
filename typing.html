@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Typing Speed Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f4f4f9;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        #text-to-type {
+            background-color: #fff;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            user-select: none;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            resize: none;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Typing Speed Test</h1>
+    <div id="text-to-type">Technology has completely changed the way we communicate, learn, and work every day. Learning to type quickly and accurately is an essential skill that helps students express their ideas clearly without getting slowed down by the keyboard. As you practice typing regularly, your fingers will build muscle memory, allowing you to focus more on your thoughts and less on finding the right keys. Stay consistent, maintain good posture, and aim for accuracy before trying to speed up.</div>
+    
+    <textarea id="input-box" placeholder="Start typing here..."></textarea>
+    
+    <div class="stats">
+        <span>Time: <span id="timer">0</span>s</span>
+        <span>WPM: <span id="wpm">0</span></span>
+        <span>Accuracy: <span id="accuracy">100</span>%</span>
+    </div>
+
+    <button id="reset-btn">Reset Test</button>
+
+    <script>
+        const textToType = document.getElementById("text-to-type").innerText;
+        const inputBox = document.getElementById("input-box");
+        const timerDisplay = document.getElementById("timer");
+        const wpmDisplay = document.getElementById("wpm");
+        const accuracyDisplay = document.getElementById("accuracy");
+        const resetBtn = document.getElementById("reset-btn");
+
+        let startTime;
+        let timerInterval;
+        let isTestRunning = false;
+
+        inputBox.addEventListener("input", () => {
+            if (!isTestRunning) {
+                isTestRunning = true;
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+
+            const typedText = inputBox.value;
+            calculateStats(typedText);
+
+            // Stop test if text is completed correctly
+            if (typedText === textToType) {
+                clearInterval(timerInterval);
+                inputBox.disabled = true;
+            }
+        });
+
+        function updateTimer() {
+            const currentTime = new Date();
+            const elapsedTime = Math.floor((currentTime - startTime) / 1000);
+            timerDisplay.innerText = elapsedTime;
+        }
+
+        function calculateStats(typedText) {
+            const timeInMinutes = (new Date() - startTime) / 60000;
+            
+            // Calculate Words Per Minute (Standard: 5 characters = 1 word)
+            const wordsTyped = typedText.length / 5;
+            const wpm = timeInMinutes > 0 ? Math.round(wordsTyped / timeInMinutes) : 0;
+            wpmDisplay.innerText = wpm;
+
+            // Calculate Accuracy
+            let correctChars = 0;
+            for (let i = 0; i < typedText.length; i++) {
+                if (typedText[i] === textToType[i]) {
+                    correctChars++;
+                }
+            }
+            const accuracy = typedText.length > 0 ? Math.round((correctChars / typedText.length) * 100) : 100;
+            accuracyDisplay.innerText = accuracy;
+        }
+
+        resetBtn.addEventListener("click", () => {
+            clearInterval(timerInterval);
+            isTestRunning = false;
+            inputBox.value = "";
+            inputBox.disabled = false;
+            timerDisplay.innerText = "0";
+            wpmDisplay.innerText = "0";
+            accuracyDisplay.innerText = "100";
+            inputBox.focus();
+        });
+    </script>
+</body>
+</html>
