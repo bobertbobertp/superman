@@ -5,8 +5,8 @@
 // =========================
 // WiFi
 // =========================
-const char* ssid = "Clover_Router";
-const char* password = "208@Clover";
+const char* ssid = "SBG6700AC-60720";
+const char* password = "eb01786059";
 
 // =========================
 // Freenove ESP32-S3-WROOM CAM
